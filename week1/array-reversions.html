@@ -1,0 +1,70 @@
+<html>
+<head>
+<script>
+(function() {
+  function countBrutal(data) {
+    var count = 0;
+    for (var i = 0; i < data.length; i++) {
+      for (var j = i+1; j < data.length; j++) {
+        if (data[i] > data[j]) {
+          count += 1;
+        }
+      }
+    }
+    return count;
+  }
+
+  function count(arr, len) {
+    var n = arr.length;
+    if (n < 2) return 0;
+    var mid = Math.ceil(n/2);
+    var left = arr.slice(0, mid);
+    var right = arr.slice(mid);
+    return count(left) + count(right) + merge(arr, left, right);
+  }
+
+  function merge(arr, left, right) {
+    var i = 0, j = 0, count = 0;
+    while (i < left.length || j < right.length) {
+      if (i === left.length) {
+        arr[i+j] = right[j];
+        j++;
+      } else if (j === right.length) {
+        arr[i+j] = left[i];
+        i++;
+      } else if (left[i] <= right[j]) {
+        arr[i+j] = left[i];
+        i++;
+      } else {
+        arr[i+j] = right[j];
+        count += left.length - i;
+        j++;
+      }
+    }
+    return count;
+  }
+
+  window.countInversions = function() {
+    var data = document.getElementById('data').value;
+    data = data.trim().split(/\s+/).map(function(item, i) {
+      return Number(item);
+    });
+    document.getElementById('result').innerHTML += '<br>Count:' + count(data.slice());
+    document.getElementById('result').innerHTML += '<br>CountBrutal: ' + countBrutal(data.slice());
+  };
+})();
+</script>
+<style>
+  body, textarea, button { font-size: 16px; padding: 10px; }
+</style>
+</head>
+<body>
+<div>
+  <textarea id="data" rows="5" cols="40" placeholder="Paste your data here"></textarea>
+</div>
+<div>
+  <button onclick="countInversions();">Run</button>
+</div>
+<p id="result"></p>
+</body>
+</html>
